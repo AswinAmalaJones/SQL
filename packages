@@ -1,0 +1,55 @@
+-- Step 1: Create student table
+CREATE TABLE student(
+  regno NUMBER PRIMARY KEY,
+  studname VARCHAR2(50),
+  dept VARCHAR2(20)
+);
+
+-- Step 2: Insert sample data
+INSERT INTO student VALUES(101, 'Ram', 'CSE');
+INSERT INTO student VALUES(102, 'Kavi', 'IT');
+INSERT INTO student VALUES(103, 'Latha', 'ECE');
+
+-- Step 3: Create PACKAGE Specification
+CREATE OR REPLACE PACKAGE student_pack AS
+  PROCEDURE display_students;
+  FUNCTION total_students RETURN NUMBER;
+END student_pack;
+/
+
+-- Step 4: Create PACKAGE Body
+CREATE OR REPLACE PACKAGE BODY student_pack AS
+
+  PROCEDURE display_students IS
+    CURSOR c IS SELECT regno, studname, dept FROM student;
+    v_reg student.regno%TYPE;
+    v_name student.studname%TYPE;
+    v_dept student.dept%TYPE;
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('--- STUDENT DETAILS ---');
+    OPEN c;
+    LOOP
+      FETCH c INTO v_reg, v_name, v_dept;
+      EXIT WHEN c%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE(v_reg || ' - ' || v_name || ' - ' || v_dept);
+    END LOOP;
+    CLOSE c;
+  END display_students;
+
+  FUNCTION total_students RETURN NUMBER IS
+    v_count NUMBER;
+  BEGIN
+    SELECT COUNT(*) INTO v_count FROM student;
+    RETURN v_count;
+  END total_students;
+
+END student_pack;
+/
+
+-- Step 5: Execute package members
+SET SERVEROUTPUT ON;
+BEGIN
+  student_pack.display_students;
+  DBMS_OUTPUT.PUT_LINE('Total Students: ' || student_pack.total_students);
+END;
+/
