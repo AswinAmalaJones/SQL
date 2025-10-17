@@ -1,0 +1,28 @@
+-- Step 1: Create student table
+CREATE TABLE student(
+  regno NUMBER PRIMARY KEY,
+  studname VARCHAR2(50),
+  dept VARCHAR2(20)
+);
+
+-- Step 2: Create log table
+CREATE TABLE log_table(
+  regno NUMBER,
+  action VARCHAR2(20),
+  action_time DATE
+);
+
+-- Step 3: Create trigger
+CREATE OR REPLACE TRIGGER trg_after_insert
+AFTER INSERT ON student
+FOR EACH ROW
+BEGIN
+  INSERT INTO log_table VALUES(:NEW.regno, 'INSERTED', SYSDATE);
+END;
+/
+
+-- Step 4: Insert sample record
+INSERT INTO student VALUES(101, 'Ram', 'CSE');
+
+-- Step 5: Check log table
+SELECT * FROM log_table;
