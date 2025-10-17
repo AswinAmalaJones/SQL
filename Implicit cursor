@@ -1,0 +1,26 @@
+-- Step 1: Create table
+CREATE TABLE student(
+  regno NUMBER PRIMARY KEY,
+  studname VARCHAR2(50),
+  dept VARCHAR2(20)
+);
+
+-- Step 2: Insert sample data
+INSERT INTO student VALUES(101, 'Ram', 'CSE');
+INSERT INTO student VALUES(102, 'Kavi', 'CSE');
+INSERT INTO student VALUES(103, 'Latha', 'ECE');
+
+-- Step 3: Enable output
+SET SERVEROUTPUT ON;
+
+-- Step 4: PL/SQL block using implicit cursor
+BEGIN
+  UPDATE student SET dept = 'IT' WHERE dept = 'CSE';
+
+  IF SQL%FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Updated rows: ' || SQL%ROWCOUNT);
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('No rows updated.');
+  END IF;
+END;
+/
